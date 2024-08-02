@@ -1,0 +1,257 @@
+EXPORT expd(λ,X)
+// Exponential probability density
+//
+// Parameters
+// λ: rate parameter
+// X: value
+// Returns
+// Exponential probability density at X
+BEGIN
+ IF X<0 THEN
+  RETURN 0;
+ ELSE
+  RETURN λ*e^(−λ*X);
+ END;
+END;
+
+EXPORT expd_cdf(λ,X)
+// Exponential cumulative distribution function
+//
+// Parameters
+// λ: rate parameter
+// X: value
+// Returns
+// Exponential cumulative distribution function at X
+BEGIN
+ IF X<0 THEN
+  RETURN 0;
+ ELSE
+  RETURN 1-e^(−λ*X);
+ END;
+END; 
+ 
+EXPORT rayleighd(s,X)
+// Rayleigh probability density
+//
+// Parameters
+// s: scale parameter
+// X: value
+// Returns
+// Rayleigh probability density at X
+BEGIN
+ IF X<0 THEN
+  RETURN 0;
+ ELSE
+  RETURN (X/s^2)*e^(−X^2/(2*s^2));
+ END;
+END;
+
+EXPORT rayleighd_cdf(s,X)
+// Rayleigh cumulative distribution function
+//
+// Parameters
+// s: scale parameter
+// X: value
+// Returns
+// Rayleigh cumulative distribution function at X
+BEGIN
+ IF X<0 THEN
+  RETURN 0;
+ ELSE
+  RETURN 1-e^(−X^2/(2*s^2));
+ END;
+END;
+    
+EXPORT betad(a,b,X)
+// Beta probability density
+//
+// Parameters
+// a: shape parameter
+// b: shape parameter
+// X: value
+// Returns
+// Beta probability density at X
+BEGIN
+ IF X<0 OR X>1 THEN
+  RETURN 0;
+ ELSE
+  RETURN X^(a-1)*(1-X)^(b-1)/Beta(a,b);
+ END;
+END;
+
+EXPORT betad_cdf(a,b,X)
+// Beta cumulative distribution function
+//
+// Parameters
+// a: shape parameter
+// b: shape parameter
+// X: value
+// Returns
+// Beta cumulative distribution function at X
+BEGIN
+ LOCAL I_x, kernel, t;
+
+ kernel := t^(a-1) * (1-t)^(b-1);
+
+ IF X <= 0 THEN
+  RETURN 0;
+ END;
+
+ IF X >= 1 THEN
+  RETURN 1;
+ ELSE
+  I_x := ∫(kernel, t, 0, X);
+  RETURN I_x/Beta(a,b); 
+ END;
+END;
+
+EXPORT gumbeld(μ,α,X)
+// Gumbel probability density
+//
+// Parameters
+// μ: location parameter
+// α: scale parameter
+// X: value
+// Returns
+// Gumbel probability density at X
+BEGIN
+ LOCAL z;
+
+ z := (X-μ)/α;
+ RETURN (1/α)*e^(-(z+e^(-z)));
+END;
+
+EXPORT gumbeld_cdf(μ,α,X)
+// Gumbel cumulative distribution function
+//
+// Parameters
+// μ: location parameter
+// α: scale parameter
+// X: value
+// Returns
+// Gumbel cumulative distribution function at X
+BEGIN
+ LOCAL z;
+
+ z := (X-μ)/α;
+ RETURN e^(-e^(-z));
+END;
+
+EXPORT weibulld(λ,α,X)
+// Weibull probability density
+//
+// Parameters
+// λ: scale parameter
+// α: shape parameter
+// X: value
+// Returns
+// Weibull probability density at X
+BEGIN
+ IF X<0 THEN
+  RETURN 0;
+ ELSE
+  RETURN (α/λ)*(X/λ)^(α-1)*e^(−(X/λ)^α);
+ END;
+END;
+
+EXPORT weibulld_cdf(λ,α,X)
+// Weibull cumulative distribution function
+//
+// Parameters
+// λ: scale parameter
+// α: shape parameter
+// X: value
+// Returns
+// Weibull cumulative distribution function at X
+BEGIN
+ IF X<0 THEN
+  RETURN 0;
+ ELSE
+   RETURN 1-e^(−(X/λ)^α);
+ END;
+END;
+
+EXPORT frechetd(μ,λ,α,X)
+// Frechet probability density
+//
+// Parameters
+// μ: location parameter
+// λ: scale parameter
+// α: shape parameter
+// X: value
+// Returns
+// Frechet probability density at X
+BEGIN
+ LOCAL z;
+
+ z := (X-μ)/λ;
+ IF z<=0 THEN
+  RETURN 0;
+ ELSE
+  RETURN (α/λ)*(z/λ)^(−1-α)*e^(-(z/λ)^−α);
+ END;
+END;
+
+EXPORT frechetd_cdf(μ,λ,α,X)
+// Frechet cumulative distribution function
+//
+// Parameters
+// μ: location parameter
+// λ: scale parameter
+// α: shape parameter
+// X: value
+// Returns
+// Frechet cumulative distribution function at X
+BEGIN
+ LOCAL z;
+
+ z := (X-μ)/λ;
+ IF z<=0 THEN
+  RETURN 0;
+ ELSE
+  RETURN e^(-(z/λ)^−α);
+ END;
+END;
+
+EXPORT gev(μ,λ,α,X)
+// Generalized extreme value probability density
+//
+// Parameters
+// μ: location parameter
+// λ: scale parameter
+// α: shape parameter
+// X: value
+// Returns
+// Generalized extreme value probability density at X
+BEGIN
+ LOCAL z;
+
+ z := (X-μ)/λ;
+ IF α=0 THEN
+  RETURN (1/λ)*e^(-z)*e^(-e^(-z));
+ ELSE
+  RETURN (1/λ)*e^(-z)*(1+α*z)^(-1/α-1)*e^(-(1+α*z)^(-1/α));
+ END;
+END;
+
+EXPORT gev_cdf(μ,λ,α,X)
+// Generalized extreme value cumulative distribution function
+//
+// Parameters
+// μ: location parameter
+// λ: scale parameter
+// α: shape parameter
+// X: value
+// Returns
+// Generalized extreme value cumulative distribution function at X
+BEGIN
+ LOCAL z;
+
+ z := (X-μ)/λ;
+ IF α=0 THEN
+  RETURN e^(-e^(-z));
+ ELSE
+  RETURN e^(-(1+α*z)^(-1/α));
+ END;
+END;
+
